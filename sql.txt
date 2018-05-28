@@ -1,0 +1,72 @@
+
+SELECT ➀ FROM ➁ WHERE ➂
+➀取得したいカラム名（横の範囲を決める）
+➁テーブル名
+➂条件（縦の範囲を決める）
+
+where 1 制限がない（縦の制限がない）
+
+例1)id,feed,user_id,createdカラムを対象にした全レコード取得
+select `id`,`feed`,`user_id`,`created` from `feeds` where 1
+
+
+例2)全カラムを対象にuser_idが13のレコードのみ取得
+select * from `feeds` where `user_id` = 13
+
+
+[テーブル結合 LEFT JOIN句]
+主役テーブルを左に、参照したいテーブルを右に置くJOIN句
+構文:SELECT ➀ FROM ➁ LEFT JOIN ➂ ON ➃ WHERE ➄
+
+➀取得したいカラムテーブル
+➁主役テーブル
+➂参照テーブル
+➃結合条件（外部キーを使用する）
+→➃結合条件のテンプレート
+`主役キー`.`外部キー`=`参照キー`.`主キー`
+
+テーブルにあるキーについて
+主キー:テーブル内で一意である情報
+外部キー：参照先の主キー
+➄条件
+※テーブルが複数出てくるため、カラム名の指定には`feed`.`id`のようにテーブル名からはじめ、ドットでつなぎカラム名を指定します。
+
+SELECT * FROM `feeds` LEFT JOIN `users` ON `feeds`.`user_id`=`users`.`id` WHERE 1
+
+
+例3)ONのあとの結合条件のみ
+主役テーブル members
+主キー: id
+外部キー: tweet.id
+
+参照テーブル twweets
+主キー: id
+
+SELECT ~ON `members`.`tweet.id`=`tweets`.`id`
+
+
+[カラムの制限]
+SELECT `feeds`.*,`users`.`name`,`users`.`img_name` FROM `feeds` LEFT JOIN `users` ON `feeds`.`user_id`=`users`.`id` WHERE 1
+
+[テーブル名のエイリアス AS句]
+すごく長いテーブル名を省略することができるよ！
+使い方: `テーブル名` AS `別名`
+SELECT * FROM `feed` AS `f` LEFT JOIN `users` AS `u`
+
+SELECT `f`.*,`u`.`name`,`u`.`img_name` FROM `feeds` AS `f` LEFT JOIN `users` AS `u` ON `f`.`user_id`=`u`.`id` WHERE 1
+
+
+[バッククォートは省略可能]
+SELECT f.*,u.name,u.img_name FROM feeds AS f LEFT JOIN users AS `u` ON f.user_id=u.id WHERE 1
+
+
+別名のもう１つのメリット
+likesテーブルから何件データが存在するのかカウントする
+SELECT COUNT(*) as `cnt` FROM `likes`
+
+→array("cnt"=>8)
+
+
+
+
+

@@ -21,7 +21,31 @@ while (true) {
         if ($users_index == false) {
             break;
         }
-$users[] = $users_index;
+
+        //つぶやき数を取得するSQL文を作成する
+        $feed_sql = "SELECT COUNT(*) AS `feed_cnt` FROM `feeds` WHERE `user_id` = ?";
+
+        //今回は$record["id"]はusers.idです
+        $feed_data = array($users_index["id"]);
+
+        //SQL文を実行する
+        $feed_stmt = $dbh->prepare($feed_sql);
+        $feed_stmt->execute($feed_data);
+
+        //like数を取得する
+        $feed = $feed_stmt->fetch(PDO::FETCH_ASSOC);
+        //$like = array("like_cnt"=>5);
+
+
+        $users_index['feed_cnt'] = $feed["feed_cnt"];
+
+
+        // var_dump($users_index);
+
+        //ここでは繰り返しているだけなので、本当は一個のデータしか入っていない
+        //それを全部使いたいので、ここでデータを一気に入れる作業をする
+        $users[] = $users_index;
+        // var_dump($users);
 
 // var_dump($users_index);
 
@@ -100,7 +124,7 @@ $users[] = $users_index;
             
             <div class="row feed_sub">
               <div class="col-xs-12">
-                <span class="comment_count">つぶやき数 : 5</span>
+                <span class="comment_count">つぶやき数 : <?php echo $user['feed_cnt'] ?></span>
               </div>
             </div>
           </div><!-- thumbnail -->
